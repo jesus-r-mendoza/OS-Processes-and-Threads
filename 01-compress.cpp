@@ -24,9 +24,39 @@ string countStr(int count, char binary) {
     return '-' + to_string(count) + '-';
 }
 
-int main() {
+int main(int argc, char* arg[]) {
 
-    ifstream file ("in.txt");
+    if ( argc <= 1 || argc > 3 ) {
+        cerr << "\n** You did not type in 2 command line arguments **\n" << endl;
+        return 1;
+    }
+
+    ifstream in;
+    in.open(arg[1]);
+
+    if (in.fail()) {
+        cerr << "\n ** The file: >> " << arg[1] << " << could not be opened, or does not exit. Please try again ** \n" << endl;
+        return 1;
+    }
+
+    bool hasOutputFile = argc == 3;
+    ofstream out;
+    string outName;
+
+    if (hasOutputFile) {
+        outName = arg[2];
+    } else {
+        outName = arg[1];
+        outName.erase(outName.length() - 4) += "-compressed.txt";
+        cout << outName << endl;
+    }
+
+    out.open(outName);
+    if (out.fail()) {
+        cerr << "\n ** The file: >> " << outName << " << could not be opened, or does not exit. Please try again ** \n" << endl;
+        return 1;
+    }
+
     string line;
     vector<string> parts;
 
@@ -38,64 +68,52 @@ int main() {
     bool isLast;
     int len;
 
-    if (file.is_open()) {
-        while( getline(file, line) ){
-            parts = split(line, " ");
-
-            for ( string str : parts ) {
-                
-                len = str.length();
-                count = 1;
-                snippet = -1;
-                result = "";
-
-                if ( len < 2 ) {
-                    result = str;
-                    cout << result << endl;
-                    continue;
-                }
-                
-                for ( int c = 0; c < len-1; c++ ) {
-
-                    curr = str[c];
-                    next = str[c+1];
-                    isLast = c == len - 2;
-
-                    if ( curr == next ) {
-                        count++;
-                        result += curr;
-
-                        if ( snippet < 0 ) {
-                            // result length needs to be chaged later
-                            snippet = result.length();
-                        }
-
-                    }
-
-                    if ( curr != next || isLast ) {
-
-                        if ( count >= 16 ) {
-                            result.erase(snippet-1); // this will erase everything after the snippet index
-                            result += countStr(count, curr);
-                        }
-                        else {
-                            result += curr;
-                        }
-
-                        if ( isLast && curr != next ) {
-                            result += next;
-                        }
-                        count = 1;
-                        snippet = -1;
-                    }
-
-                }
+    while( getline(in, line) ){
+        parts = split(line, " ");
+        for ( string str : parts ) {
+            
+            len = str.length();
+            count = 1;
+            snippet = -1;
+            result = "";
+            if ( len < 2 ) {
+                result = str;
                 cout << result << endl;
+                continue;
             }
+            
+            for ( int c = 0; c < len-1; c++ ) {
+                curr = str[c];
+                next = str[c+1];
+                isLast = c == len - 2;
+                if ( curr == next ) {
+                    count++;
+                    result += curr;
+                    if ( snippet < 0 )
+                        snippet = result.length();
+                }
+                if ( curr != next || isLast ) {
+                    if ( count >= 16 ) {
+                        result.erase(snippet-1);
+                        result += countStr(count, curr);
+                    }
+                    else {
+                        result += curr;
+                    }
+                    if ( isLast && curr != next ) {
+                        result += next;
+                    }
+                    count = 1;
+                    snippet = -1;
+                }
+            }
+            out << result << endl;
         }
-        return 0;
     }
+    in.close();
+    in.clear();
 
-    cout << "An error occurred while opening the file." << endl;
-    return 1;
+    out.close();
+    out.clear();
+    return 0;
 }
