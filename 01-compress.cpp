@@ -11,9 +11,9 @@ vector<string> split(string str, string regex) {
     while ( ( found = str.find(regex) ) != -1 ) {
         segment = str.substr(0, found);
         str.erase(0, found + regex.length());
-        vect.push_back(segment);
+        vect.push_back(segment += ' ');
     }
-    vect.push_back(str);
+    vect.push_back(str += '\n');
     return vect;
 }
 
@@ -72,7 +72,7 @@ int main(int argc, char* arg[]) {
         parts = split(line, " ");
         for ( string str : parts ) {
             
-            len = str.length();
+            len = str.length()-1;
             count = 1;
             snippet = -1;
             result = "";
@@ -107,7 +107,7 @@ int main(int argc, char* arg[]) {
                     snippet = -1;
                 }
             }
-            out << result << endl;
+            out << result << str[len];
         }
     }
     in.close();
