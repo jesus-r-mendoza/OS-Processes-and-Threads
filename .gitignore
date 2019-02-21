@@ -4,8 +4,15 @@
 # Except for these ...
 !.gitignore
 
+!src/
+!src/**
+
+!executables/
+!executables/**
+
+!inputs/
+!inputs/**
+
 !*.cpp
 !*.exe
 !*.txt
-!*.c
-
