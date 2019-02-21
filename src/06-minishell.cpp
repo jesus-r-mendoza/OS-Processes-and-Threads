@@ -8,7 +8,7 @@
 char inp[25];
 char *cmd[5];
 
-int parseLine(char *line)
+int parseLine(char *line) 
 {
 	char *p;
 	int count = 0;
