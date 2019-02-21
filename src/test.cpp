@@ -6,13 +6,14 @@
 void  ChildProcess(void);                /* child process prototype  */
 void  ParentProcess(void);               /* parent process prototype */
 
-void  main(void)
+int main()
 {
     pid_t pid = fork();
     if (pid == 0)
         ChildProcess();
     else
         ParentProcess();
+    return 0;
 }
 void  ChildProcess(void)
 {
