@@ -5,7 +5,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-char inp[25];
+char inp[25]; 
 char *cmd[5];
 
 int parseLine(char * line) {
