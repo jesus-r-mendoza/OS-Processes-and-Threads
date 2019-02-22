@@ -8,14 +8,6 @@
 char inp[25];
 char *cmd[5];
 
-static void prompt()
-{
-	printf("\nMoreShell > ");
-	fgets(inp,25,stdin);
-	inp[strlen(inp)-1]='\0';
-	parseLine(inp);
-}
-
 int parseLine(char * line) {
 char * p;
 int count = 0;
@@ -25,6 +17,14 @@ cmd[count] = p;
 count++;
 p = strtok(NULL," ");
 }
+}
+
+static void prompt()
+{
+	printf("\nMoreShell > ");
+	fgets(inp,25,stdin);
+	inp[strlen(inp)-1]='\0';
+	parseLine(inp);
 }
 
 int main(int argc,char **argv)
