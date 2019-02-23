@@ -13,10 +13,9 @@ int main(int argc, char* arg[]) {
     else if ( argc == 3 )
         hasOutputFile = true;
     else {
-        printf("\n ** Incorrect amount of arguments ** \n\n");
-        printf("\n ** ");
-        printf("%d", argc);
-        printf(" argument(s)are not acceptable ** \n\n");
+        printf("\n ** Incorrect number of arguments **");
+        printf("\n ** %d argument(s) ; Not acceptable **", argc-1);
+        printf("\n ** Use only 1 or 2 arguments ** \n\n");
         return 1;
     }
 
@@ -27,18 +26,17 @@ int main(int argc, char* arg[]) {
     }
     else if ( pid == 0 ) {
         if ( hasOutputFile ) {
-            execl("./compress", arg[0], arg[1], arg[2], NULL);
-            printf(arg[1]);
-            printf("  -  ");
-            printf(arg[2]);
-            printf("\n\n has 2 args\n\n");
+            // Here we assume that the 01-compress executable
+            // is in the same directory as from where we are calling
+            // the 03-forkcompress executable
+            execl("./01-compress", arg[0], arg[1], arg[2], NULL);
         }
         else {
-            execl("./compress", arg[0], arg[1], NULL);
-            printf(arg[1]);
-            printf("\n\nhas 1 arg\n\n");
+            // Here we assume that the 01-compress executable
+            // is in the same directory as from where we are calling
+            // the 03-forkcompress executable
+            execl("./01-compress", arg[0], arg[1], NULL);
         }
-        printf("Something should have executed\n");
     }
     else {
         wait(NULL);
