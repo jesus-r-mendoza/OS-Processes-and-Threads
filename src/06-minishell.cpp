@@ -8,7 +8,7 @@
 char inp[25];
 char *cmd[5];
 
-int parseLine(char *line)
+int parseLine(char *line)  
 {
 	char *p;
 	int count = 0;
@@ -46,7 +46,7 @@ int main(int argc, char **argv)
 		case 0:
 			if (execlp(cmd[0], cmd[0], NULL) == -1)
 			{
-				printf("Error: running command: '%s'\n Please check your command using help\n\n", cmd[0]);
+				printf("Error: running command: '%s'\n Please check your command \n\n", cmd[0]);
 				exit(0);
 			}
 			break;
