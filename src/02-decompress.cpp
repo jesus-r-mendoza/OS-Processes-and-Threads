@@ -48,7 +48,6 @@ int main(int argc, char* arg[]) {
     } else {
         outName = arg[1];
         outName.erase(outName.length() - 4) += "-decompressed.txt";
-        cout << outName << endl;
     }
 
     out.open(outName);
@@ -97,5 +96,8 @@ int main(int argc, char* arg[]) {
 
     out.close();
     out.clear();
+
+    cout << "\nYour file: \n\n  --> [ " << arg[1] << " ] \n\nwas successfully decompressed to: \n\n  --> [ " << outName << " ]\n" << endl;
+
     return 0;
 }
