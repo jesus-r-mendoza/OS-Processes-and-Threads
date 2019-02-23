@@ -11,7 +11,7 @@ char *cmd[5];
 int parseLine(char * line) {
 char * p;
 int count = 0;
-p = strtok(line, " ");
+p = strtok(line, " ");  // for splitting a string 
 while (p && strcmp(p,"|") != 0) {
 cmd[count] = p;
 count++;
