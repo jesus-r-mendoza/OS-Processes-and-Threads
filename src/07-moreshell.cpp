@@ -27,7 +27,6 @@ static void prompt()
 	parseLine(inp);
 }
 
-
 int main(int argc,char **argv)
 {
 	prompt();
