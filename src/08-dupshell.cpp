@@ -25,7 +25,7 @@ p = strtok(NULL," ");
 }
 cmd[count]=NULL;
 return count;
-}
+} // new comment
 
 static void prompt()                     //command line 
 {
