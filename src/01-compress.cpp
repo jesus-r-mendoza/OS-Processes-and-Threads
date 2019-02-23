@@ -26,8 +26,16 @@ string countStr(int count, char binary) {
 
 int main(int argc, char* arg[]) {
 
-    if ( argc <= 1 || argc > 3 ) {
-        cerr << "\n** You did not type in 2 command line arguments **\n" << endl;
+    bool hasOutputFile;
+
+    if ( argc ==  2 ) 
+        hasOutputFile = false;
+    else if ( argc == 3 )
+        hasOutputFile = true;
+    else {
+        printf("\n ** Incorrect number of arguments **");
+        printf("\n ** %d argument(s) ; Not acceptable **", argc-1);
+        printf("\n ** Use only 1 or 2 arguments ** \n\n");
         return 1;
     }
 
@@ -39,7 +47,6 @@ int main(int argc, char* arg[]) {
         return 1;
     }
 
-    bool hasOutputFile = argc == 3;
     ofstream out;
     string outName;
 

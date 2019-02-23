@@ -13,10 +13,9 @@ int main(int argc, char* arg[]) {
     else if ( argc == 3 )
         hasOutputFile = true;
     else {
-        printf("\n ** Incorrect amount of arguments ** \n\n");
-        printf("\n ** ");
-        printf("%d", argc);
-        printf(" argument(s)are not acceptable ** \n\n");
+        printf("\n ** Incorrect number of arguments **");
+        printf("\n ** %d argument(s) ; Not acceptable **", argc-1);
+        printf("\n ** Use only 1 or 2 arguments ** \n\n");
         return 1;
     }
 
