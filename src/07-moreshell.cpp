@@ -39,7 +39,7 @@ int main(int argc,char **argv)
 	switch (ForkPID) {
 	case -1: printf("Error: Failed to fork.\n"); break;
 	case 0:
-		if (execvp(cmd[0],cmd) == -1) {
+		if (execvp(cmd[0],cmd) == -1) {                         //execute commands such as more filename and ls –l ~/tmp etc 
 		printf("Error: running command: '%s'\n",cmd[0]);
 		exit(0);
 		}
