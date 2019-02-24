@@ -12,7 +12,7 @@ char inp[25];
 char *cmd1[5];
 char *cmd2[5];
 int f;
-int mypipe[2];
+int mypipe[2];           //array of 2 
 
 int parseline(char * line , char * cmd[]) {          
 char * p;
@@ -45,10 +45,10 @@ static void prompt()                     //command line
 	while (p) {
 	t[count] = p;
 	count++;
-	p = strtok(NULL,"|");
+	p = strtok(NULL,"|");          
 	}
-	parseline(t[0],cmd1);
-	parseline(t[1],cmd2);
+	parseline(t[0],cmd1);                     //It displays the prompt 'DupShell>' and gets the input from the user and calls parseLine
+	parseline(t[1],cmd2);                //It parses if the given command has a pipe and pass it to parseline as seperate arguments.
 	}
 
 	else
@@ -58,8 +58,8 @@ static void prompt()                     //command line
 	}
 }
 
-
-int main(int argc,char **argv)
+ 
+int main(int argc,char **argv)           //MAIN -- It forks two child process and uses pipe to execute command lines connected with pipes.
 {
 	prompt();
 
@@ -78,9 +78,9 @@ int main(int argc,char **argv)
 	case -1: printf("Error: Failed to fork.\n"); break;
 	case 0:
 
-			if(f==1)
+			if(f==1)                                  //dup2 to redirect IO.
 			{
-			dup2(mypipe[1],STDOUT_FILENO);//this command redirects the output of the executed command into the pipe
+			dup2(mypipe[1],STDOUT_FILENO);          //this command redirects the output of the executed command into the pipe
 			close(mypipe[0]);
 			close(mypipe[1]);
 			}
@@ -103,7 +103,7 @@ int main(int argc,char **argv)
 				close(mypipe[1]);
 				if(f==1)
 				{
-				if (execvp(cmd2[0],cmd2) == -1) {   
+				if (execvp(cmd2[0],cmd2) == -1) {                
 				printf("Error: running command: '%s'\n",cmd2[0]);
 				exit(0);
 				}
