@@ -84,7 +84,7 @@ int main(int argc, char* arg[]) {
             result = "";
             if ( len < 2 ) {
                 result = str;
-                cout << result << endl;
+                out << result << endl;
                 continue;
             }
             
