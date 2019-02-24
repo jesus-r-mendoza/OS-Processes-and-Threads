@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <vector>
 using namespace std;
 
 #define BUFFER_SIZE 7
@@ -15,6 +16,26 @@ using namespace std;
 int pipe_fd[2];
 string intputFileName;
 string ouputFileName;
+
+vector<string> split(string str, string regex) {
+    int found;
+    vector<string> vect;
+    string segment;
+    while ( ( found = str.find(regex) ) != -1 ) {
+        segment = str.substr(0, found);
+        str.erase(0, found + regex.length());
+        vect.push_back(segment += ' ');
+    }
+    vect.push_back(str += '\n');
+    return vect;
+}
+
+string countStr(int count, char binary) {
+    if ( binary == '1' ) {
+        return '+' + to_string(count) + '+';
+    }
+    return '-' + to_string(count) + '-';
+}
 
 void parentProcess(string inFileName) {
     // Parent Process
