@@ -9,12 +9,7 @@
 #include <vector>
 using namespace std;
 
-#define BUFFER_SIZE 500
-#define READ_END 0
-#define WRITE_END 1
-
 int NUM_PROCESSES = 10; // This is only a default value; can be overriden
-string total = "";
 
 string countStr(int count, char binary) {
     if ( binary == '1' ) {
@@ -193,10 +188,7 @@ int main(int argc, char* args[]) {
     for ( int w = 0; w < NUM_PROCESSES; w++ )
         wait(NULL);
     
-    out << total;
-    cout << "total = " << total << endl;;
     out.clear();
     out.close();
-    cout << "reached end\n";
     return 0;
 }
