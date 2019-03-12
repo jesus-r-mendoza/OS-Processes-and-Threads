@@ -30,20 +30,20 @@ into the command problem. Now Follow these procedures to rum each program.
 
 ./05-parfork <input file>  // an output file will be auto generated
 ./05-parfork <input file> <output file>
+./05-parfork <input file> <output file> <num of processess>
 
-6. To run the Par Fork file type one of the following commands.
 
-./05-parfork<input file>  // an output file will be auto generated
-./05-parfork <input file> <output file>
-
+6. To rin the Minishell type the following command
 ./06-minishell
 
-./06-moreshell
+7. To rin the Minishell type the following command
+./07-moreshell
 
-./06-dupshell
-
+8. To rin the Minishell type the following command
+./08-dupshell
 
 9. To run the Par Thread file type one of the following commands.
 
 ./09-parthread <input file>  // an output file will be auto generated
 ./09-parthread <input file> <output file>
+./09-parthread <input file> <output file> <num of threads>
