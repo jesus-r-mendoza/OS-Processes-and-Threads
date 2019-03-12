@@ -7,4 +7,4 @@ all:
 	g++ -o 06-minishel 06-minishell.cpp
 	g++ -o 07-moreshell 07-moreshell.cpp
 	g++ -o 08-dupshell 08-dupshell.cpp
-	g++ -o 09-parthread 09-parthread.cpp
+	g++ -o 09-parthread 09-parthread.cpp -lpthread
