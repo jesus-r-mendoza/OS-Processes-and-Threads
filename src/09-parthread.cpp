@@ -1,4 +1,3 @@
-#include <pthread.h>
 #include <string>
 #include <string.h>
 #include <iostream>
@@ -8,9 +7,12 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <vector>
+#include <pthread.h>
+#include <thread>
 using namespace std;
 
-#define NUM_THREADS 10
+int NUM_THREADS = 10; // This is only a default value; can be overriden
+string outName;
 
 string countStr(int count, char binary) {
     if ( binary == '1' ) {
@@ -68,17 +70,18 @@ vector<string> splitFile(string inFileName) {
         x += segmntLen;
     }
     in.clear();
-    in.clear();
+    in.close();
     return segments;
 }
 
-void compress(string sudoFile, string outFileName) {
-    
+void* compress(void* name) {
+    char *sudoFile = static_cast<char *>(name);
+    cout << "called compress\n";
     ofstream out;
 
-    out.open(outFileName, ios_base::app);
+    out.open(outName, ios_base::out);
     if (out.fail()) {
-        cerr << "\n ** The file: >> " << outFileName << " << could not be opened, or does not exit. Please try again ** \n" << endl;
+        cerr << "\n ** The file: >> " << outName << " << could not be opened, or does not exit. Please try again ** \n" << endl;
         exit(1);
     }
     
@@ -108,8 +111,7 @@ void compress(string sudoFile, string outFileName) {
             result = "";
             if ( len < 2 ) {
                 result = str;
-                //result += (result + '\n');
-                out << result << endl;
+                resultant += (result);
                 continue;
             }
             
@@ -138,33 +140,36 @@ void compress(string sudoFile, string outFileName) {
                     snippet = -1;
                 }
             }
-
-            result += str[len];
-            //resultant += result;
-            out << result;
+            if ( str[len] == ' ' )
+                result += str[len];
+            resultant += result;
         }
     }
-    //out.clear();
+    out << resultant;
+    out.clear();
     out.close();
-    //return resultant;
+    cout << resultant;
+    pthread_exit(NULL);
 }
 
 int main(int argc, char* args[]) {
-
+    cout << "executing main\n";
     bool hasOutputFile;
 
     if ( argc ==  2 ) 
         hasOutputFile = false;
     else if ( argc == 3 )
         hasOutputFile = true;
+    else if ( argc == 4 ) {
+        hasOutputFile = true;
+        NUM_THREADS = stoi(args[3]);
+    }
     else {
         printf("\n ** Incorrect number of arguments **");
         printf("\n ** %d argument(s) ; Not acceptable **", argc-1);
-        printf("\n ** Use only 1 or 2 arguments ** \n\n");
+        printf("\n ** Use only 1, 2 or 3 arguments ** \n\n");
         return 1;
     }
-
-    string outName;
 
     if (hasOutputFile) {
         outName = args[2];
@@ -173,20 +178,35 @@ int main(int argc, char* args[]) {
         outName.erase(outName.length() - 4) += "-compressed.txt";
     }
 
+    int rc;
     vector<string> sections = splitFile(args[1]);
-    pthread_t tids[NUM_THREADS];
-
-    string total = "";
-
-    for ( int f = 0; f < NUM_THREADS; f++ ) {
-        // tids[f] = pthread_create(&f, NULL, compress, NULL);
-        // if (tids[f]) {
-        //     exit(-1);
-        // }
+    pthread_t tid[NUM_THREADS];
+    for ( int t = 0; t < NUM_THREADS; t++ ) {
+        void* ptr = &sections[t];
+        rc = pthread_create(&tid[t], NULL, compress, ptr);
+        if (rc) {
+            cout << "\n\n** There was an error when creating a new Thread **\n\n";
+            return -1;
+        }
+    }
+    
+    for ( int i = 0; i < NUM_THREADS; i++ ) {
+        pthread_join(tid[i], NULL);
     }
 
+    // for ( int f = 0; f < NUM_THREADS; f++ ) {
+    //     cout << "Process: " << f << endl;
+    //     if ( fork() == 0 ) {
+    //         out << compress(sections[f]);
+    //         out.clear();
+    //         out.close();
+    //         exit(0);
+    //     }
+    //     wait(NULL);
+    // }
+
     // for ( int w = 0; w < NUM_THREADS; w++ )
-    //     pthread_join(tids[w],NULL);
+    //     wait(NULL);
     
     return 0;
 }
