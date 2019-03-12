@@ -9,7 +9,7 @@
 #include <vector>
 using namespace std;
 
-#define BUFFER_SIZE 50
+#define BUFFER_SIZE 500
 #define READ_END 0
 #define WRITE_END 1
 
