@@ -9,7 +9,12 @@
 #include <vector>
 using namespace std;
 
-#define NUM_PROCESSES 10
+#define BUFFER_SIZE 500
+#define READ_END 0
+#define WRITE_END 1
+
+int NUM_PROCESSES = 10; // This is only a default value; can be overriden
+string total = "";
 
 string countStr(int count, char binary) {
     if ( binary == '1' ) {
@@ -67,19 +72,11 @@ vector<string> splitFile(string inFileName) {
         x += segmntLen;
     }
     in.clear();
-    in.clear();
+    in.close();
     return segments;
 }
 
-void compress(string sudoFile, string outFileName) {
-    
-    ofstream out;
-
-    out.open(outFileName, ios_base::app);
-    if (out.fail()) {
-        cerr << "\n ** The file: >> " << outFileName << " << could not be opened, or does not exit. Please try again ** \n" << endl;
-        exit(1);
-    }
+string compress(string sudoFile) {
     
     string resultant = "";
 
@@ -107,8 +104,7 @@ void compress(string sudoFile, string outFileName) {
             result = "";
             if ( len < 2 ) {
                 result = str;
-                //result += (result + '\n');
-                out << result << endl;
+                resultant += (result);
                 continue;
             }
             
@@ -137,15 +133,12 @@ void compress(string sudoFile, string outFileName) {
                     snippet = -1;
                 }
             }
-
-            result += str[len];
-            //resultant += result;
-            out << result;
+            if ( str[len] == ' ' )
+                result += str[len];
+            resultant += result;
         }
     }
-    //out.clear();
-    out.close();
-    //return resultant;
+    return resultant;
 }
 
 int main(int argc, char* args[]) {
@@ -156,10 +149,14 @@ int main(int argc, char* args[]) {
         hasOutputFile = false;
     else if ( argc == 3 )
         hasOutputFile = true;
+    else if ( argc == 4 ) {
+        hasOutputFile = true;
+        NUM_PROCESSES = stoi(args[3]);
+    }
     else {
         printf("\n ** Incorrect number of arguments **");
         printf("\n ** %d argument(s) ; Not acceptable **", argc-1);
-        printf("\n ** Use only 1 or 2 arguments ** \n\n");
+        printf("\n ** Use only 1, 2 or 3 arguments ** \n\n");
         return 1;
     }
 
@@ -172,35 +169,34 @@ int main(int argc, char* args[]) {
         outName.erase(outName.length() - 4) += "-compressed.txt";
     }
 
+    ofstream out;
+
+    out.open(outName, ios_base::out);
+    if (out.fail()) {
+        cerr << "\n ** The file: >> " << outName << " << could not be opened, or does not exit. Please try again ** \n" << endl;
+        exit(1);
+    }
+
     vector<string> sections = splitFile(args[1]);
-    pid_t pids[NUM_PROCESSES];
-
-    string total = "";
-
+    //string total = "";
     for ( int f = 0; f < NUM_PROCESSES; f++ ) {
-        pids[f] = fork();
-        if ( pids[f] < 0 ) {
-            cerr << "\n ** Fork Failed ** \n" << endl;
-            return 1;
-        } else if ( pids[f] == 0 ) {
-            compress(sections[f], outName);
+        cout << "Process: " << f << endl;
+        if ( fork() == 0 ) {
+            out << compress(sections[f]);
+            out.clear();
+            out.close();
+            exit(0);
         }
+        wait(NULL);
     }
 
     for ( int w = 0; w < NUM_PROCESSES; w++ )
         wait(NULL);
     
-    // ofstream out;
-
-    // out.open(outName);
-    // if (out.fail()) {
-    //     cerr << "\n ** The file: >> " << outName << " << could not be opened, or does not exit. Please try again ** \n" << endl;
-    //     exit(1);
-    // }
-
-    // cout << total << endl;
-
-    // out << total;
-
+    out << total;
+    cout << "total = " << total << endl;;
+    out.clear();
+    out.close();
+    cout << "reached end\n";
     return 0;
 }
